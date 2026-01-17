@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>未被书写的她 - 收集物品</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .screen {
+            background-image: url('./陶然亭.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: '华文行楷', serif !important;
+        }
+
+        .screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 0;
+        }
+
+        .screen > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        h2 {
+            font-family: '华文行楷', serif !important;
+            font-weight: normal !important;
+            color: white !important;
+            font-size: 32px !important;
+        }
+
+        h3 {
+            font-family: '华文行楷', serif !important;
+            font-weight: normal !important;
+            color: white !important;
+            font-size: 24px !important;
+        }
+
+        p {
+            font-family: '华文行楷', serif !important;
+            font-weight: normal !important;
+            color: #E8E8E8 !important;
+            font-size: 20px !important;
+        }
+        
+        .post {
+            background: rgba(0, 0, 0, 0.5) !important;
+            border-left: 4px solid white !important;
+            border-radius: 6px !important;
+            padding: 15px !important;
+        }
+        
+        .post-author {
+            color: white !important;
+            font-family: '华文行楷', serif !important;
+            font-size: 18px !important;
+            font-weight: bold !important;
+        }
+        
+        .post-content {
+            color: #E8E8E8 !important;
+            font-family: '华文行楷', serif !important;
+            font-size: 16px !important;
+        }
+        
+        .post-time {
+            color: #C0C0C0 !important;
+            font-family: '华文行楷', serif !important;
+            font-size: 14px !important;
+        }
+
+        .grid-item-label {
+            font-family: '华文行楷', serif !important;
+            color: white !important;
+            font-size: 16px !important;
+        }
+        
+        .grid-item {
+            background: rgba(0, 0, 0, 0.6) !important;
+            border: 2px solid rgba(255, 255, 255, 0.4) !important;
+            color: white !important;
+        }
+
+        .grid-item:hover {
+            background: rgba(0, 0, 0, 0.8) !important;
+            border-color: white !important;
+        }
+
+        button {
+            font-family: '华文行楷', serif !important;
+            font-weight: normal !important;
+            font-size: 20px !important;
+            background: rgba(139, 0, 0, 0.8) !important;
+            color: white !important;
+            border: 2px solid white !important;
+        }
+
+        button:hover {
+            background: rgba(139, 0, 0, 0.95) !important;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .btn-secondary {
+            background: rgba(100, 100, 100, 0.6) !important;
+            border-color: white !important;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(100, 100, 100, 0.8) !important;
+        }
+        
+        .modal-content {
+            background: rgba(30, 30, 30, 0.95) !important;
+            font-family: '华文行楷', serif !important;
+            color: white !important;
+        }
+        
+        .modal-content h2 {
+            color: white !important;
+        }
+        
+        .modal-content p {
+            color: #E8E8E8 !important;
+        }
+    </style>
+</head>
+<body>
+<div class="phone-container">
+    <div class="screen">
+        <h2>收集物品</h2>
+        
+        <h3>可收集物品</h3>
+        <div class="grid">
+            <div class="grid-item" onclick="showItemModal(0)">
+                <div class="grid-item-icon">📚</div>
+                <div class="grid-item-label">日记</div>
+            </div>
+            <div class="grid-item" onclick="showItemModal(1)">
+                <div class="grid-item-icon">✒️</div>
+                <div class="grid-item-label">来信</div>
+            </div>
+            <div class="grid-item" onclick="showItemModal(2)">
+                <div class="grid-item-icon">📷</div>
+                <div class="grid-item-label">照片</div>
+            </div>
+        </div>
+        
+        <h3>用户留言</h3>
+        <div id="postsList">
+            <div class="post">
+                <div class="post-author">用户：小李</div>
+                <div class="post-content">这些故事让我看到了那些被历史遗忘的女性，她们的勇气值得被铭记。</div>
+                <div class="post-time">2024年1月18日</div>
+            </div>
+            <div class="post">
+                <div class="post-author">用户：张莉</div>
+                <div class="post-content">游览这些地点，感受历史的温度，思考女性的角色。非常有意义！</div>
+                <div class="post-time">2024年1月17日</div>
+            </div>
+        </div>
+        
+        <a href="page4.html" style="text-decoration: none; width: 100%; margin-top: auto;">
+            <button class="btn-secondary">返回</button>
+        </a>
+    </div>
+</div>
+
+<!-- 物品详情弹框 -->
+<div id="itemModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="itemTitle"></h2>
+            <button class="modal-close" onclick="closeItemModal()">×</button>
+        </div>
+        <p><strong>涉及人物：</strong><span id="itemPeople"></span></p>
+    </div>
+</div>
+
+<script>
+    const items = [
+        { title: '日记', people: '待补充' },
+        { title: '来信', people: '待补充' },
+        { title: '照片', people: '待补充' }
+    ];
+
+    function showItemModal(index) {
+        const item = items[index];
+        document.getElementById('itemTitle').textContent = item.title;
+        document.getElementById('itemPeople').textContent = item.people;
+        document.getElementById('itemModal').classList.add('show');
+    }
+
+    function closeItemModal() {
+        document.getElementById('itemModal').classList.remove('show');
+    }
+
+    document.getElementById('itemModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeItemModal();
+        }
+    });
+</script>
+</body>
+</html>

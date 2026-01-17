@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>未被书写的她 - 登陆</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+<div class="phone-container">
+    <div class="screen" style="background-image: url('./冰心.jpg'); background-size: 100%; background-position: -200px center; background-attachment: fixed; background-repeat: no-repeat; position: relative;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); z-index: 0;"></div>
+        
+        <div style="position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; width: 100%; padding: 20px; font-family: '华文行楷', serif;">
+            <h2 style="color: #8B0000; margin-bottom: 40px; font-size: 36px; font-family: '华文行楷', serif;">未被书写的她</h2>
+            
+            <form id="loginForm" style="width: 100%; max-width: 300px; display: flex; flex-direction: column; font-family: '华文行楷', serif;">
+                <input type="text" id="username" placeholder="用户名" required style="background: rgba(255, 255, 255, 0.9); border: 2px solid #8B0000; font-family: '华文行楷', serif; font-size: 18px; padding: 16px;">
+                <input type="password" id="password" placeholder="密码" required style="background: rgba(255, 255, 255, 0.9); border: 2px solid #8B0000; font-family: '华文行楷', serif; font-size: 18px; padding: 16px;">
+                <button type="button" onclick="handleLogin()" style="background: linear-gradient(135deg, #8B0000, #1a1a1a); margin-top: 20px; font-family: '华文行楷', serif; font-size: 24px; padding: 16px;">登录</button>
+            </form>
+            
+            <a href="javascript:void(0)" style="text-decoration: none; width: 100%; max-width: 300px; margin-top: 15px; font-family: '华文行楷', serif;">
+                <button class="btn-secondary" onclick="exitApp()" style="background: rgba(0, 0, 0, 0.5); color: white; border: 2px solid #8B0000; font-family: '华文行楷', serif; font-size: 24px; padding: 16px;">退出</button>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function handleLogin() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        if (username && password) {
+            localStorage.setItem('username', username);
+            
+            fetch('http://127.0.0.1:5000/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username, password: password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = 'page3.html';
+                } else {
+                    alert('登陆失败：' + data.message);
+                }
+            })
+            .catch(err => {
+                console.log('后端错误或未启动，本地跳转');
+                window.location.href = 'page3.html';
+            });
+        } else {
+            alert('请输入用户名和密码');
+        }
+    }
+
+    function exitApp() {
+        window.close();
+    }
+</script>
+</body>
+</html>

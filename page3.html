@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>未被书写的她 - 分类</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .screen {
+            padding: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-around !important;
+            align-items: center !important;
+            background: #000 !important;
+        }
+        
+        .category-section {
+            width: 100%;
+            height: 33.33%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            position: relative;
+            border-bottom: 1px solid rgba(200, 200, 200, 0.2);
+        }
+
+        .category-section:last-child {
+            border-bottom: none;
+        }
+
+        .category-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .category-section:nth-child(1) {
+            background-image: url('./故宫.jpg');
+        }
+
+        .category-section:nth-child(2) {
+            background-image: url('./陶然亭.jpg');
+        }
+
+        .category-section:nth-child(3) {
+            background-image: url('./中央戏剧学院.webp');
+        }
+        
+        .category-button {
+            background: rgba(200, 200, 200, 0.05) !important;
+            color: white !important;
+            border: 2px solid rgba(255, 255, 255, 0.2) !important;
+            font-family: '华文行楷', serif !important;
+            font-size: 36px !important;
+            font-weight: normal !important;
+            padding: 30px 40px !important;
+            margin: 0 !important;
+            cursor: pointer !important;
+            transition: all 0.3s !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+            outline: none !important;
+            position: relative !important;
+            z-index: 2 !important;
+            backdrop-filter: blur(2px) !important;
+        }
+        
+        .category-button:hover {
+            background: rgba(200, 200, 200, 0.15) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .category-button:focus {
+            outline: none !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .category-button:active {
+            outline: none !important;
+        }
+    </style>
+</head>
+<body>
+<div class="phone-container">
+    <div class="screen">
+        <div class="category-section">
+            <button class="category-button" onclick="goToCategory('凤骨丹心')">凤骨丹心</button>
+        </div>
+        <div class="category-section">
+            <button class="category-button" onclick="goToCategory('错位芳华')">错位芳华</button>
+        </div>
+        <div class="category-section">
+            <button class="category-button" onclick="goToCategory('舞台之上')">舞台之上</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function goToCategory(category) {
+        window.location.href = `page4.html?category=${encodeURIComponent(category)}`;
+    }
+</script>
+</body>
+</html>

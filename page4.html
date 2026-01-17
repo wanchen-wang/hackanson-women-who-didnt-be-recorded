@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>未被书写的她 - 故事</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .screen {
+            background-image: url('./陶然亭.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: '华文行楷', serif !important;
+        }
+
+        .screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 0;
+        }
+
+        .screen > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        h2 {
+            font-family: '华文行楷', serif !important;
+            font-weight: normal !important;
+            color: white !important;
+            font-size: 32px !important;
+        }
+
+        h3 {
+            font-family: '华文行楷', serif !important;
+            font-weight: normal !important;
+            color: white !important;
+            font-size: 24px !important;
+        }
+
+        p {
+            font-family: '华文行楷', serif !important;
+            font-weight: normal !important;
+            color: #E8E8E8 !important;
+            font-size: 20px !important;
+        }
+
+        .story-section {
+            background: rgba(0, 0, 0, 0.5) !important;
+            border-left: 4px solid white !important;
+            border-radius: 6px !important;
+            padding: 15px !important;
+        }
+
+        button {
+            font-family: '华文行楷', serif !important;
+            font-weight: normal !important;
+            font-size: 20px !important;
+            background: rgba(139, 0, 0, 0.8) !important;
+            color: white !important;
+            border: 2px solid white !important;
+        }
+
+        button:hover {
+            background: rgba(139, 0, 0, 0.95) !important;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .btn-secondary {
+            background: rgba(100, 100, 100, 0.6) !important;
+            border-color: white !important;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(100, 100, 100, 0.8) !important;
+        }
+        
+        .grid-item-label {
+            color: white !important;
+        }
+
+        .grid-item {
+            background: rgba(0, 0, 0, 0.5) !important;
+            border: 2px solid rgba(255, 255, 255, 0.5) !important;
+            color: white !important;
+        }
+
+        .grid-item:hover {
+            background: rgba(0, 0, 0, 0.7) !important;
+            border-color: white !important;
+        }
+
+        .modal-content {
+            background: rgba(30, 30, 30, 0.95) !important;
+            color: white !important;
+        }
+
+        .modal-content h2 {
+            color: white !important;
+        }
+
+        .modal-content p {
+            color: #E8E8E8 !important;
+        }
+    </style>
+</head>
+<body>
+<div class="phone-container">
+    <div class="screen">
+        <h2 id="storyTitle">错位芳华</h2>
+        
+        <div class="story-section">
+            <p id="storyContent">故事内容加载中...</p>
+        </div>
+        
+        <button onclick="goToMap()">游览路线</button>
+        <button onclick="goToCollect()">待收集品</button>
+        
+        <h3>可收集物品</h3>
+        <div class="grid">
+            <div class="grid-item" onclick="showItemModal(0)">
+                <div class="grid-item-icon">📚</div>
+                <div class="grid-item-label">日记</div>
+            </div>
+            <div class="grid-item" onclick="showItemModal(1)">
+                <div class="grid-item-icon">✒️</div>
+                <div class="grid-item-label">来信</div>
+            </div>
+            <div class="grid-item" onclick="showItemModal(2)">
+                <div class="grid-item-icon">📷</div>
+                <div class="grid-item-label">照片</div>
+            </div>
+        </div>
+        
+        <a href="page3.html" style="text-decoration: none; width: 100%;">
+            <button class="btn-secondary">返回</button>
+        </a>
+    </div>
+</div>
+
+<!-- 物品详情弹框 -->
+<div id="itemModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="itemTitle"></h2>
+            <button class="modal-close" onclick="closeItemModal()">×</button>
+        </div>
+        <p><strong>涉及人物：</strong><span id="itemPeople"></span></p>
+    </div>
+</div>
+
+<script>
+    const categories = {
+        '凤骨丹心': {
+            story: '凤骨丹心讲述了几位伟大女性的故事，她们在困难中坚持信念，用不屈的精神书写了属于自己的人生篇章。'
+        },
+        '错位芳华': {
+            story: '错位芳华描述了那些在历史转折点上，为了爱情、为了理想而做出选择的女性，她们的故事充满了戏剧性和感动。'
+        },
+        '舞台之上': {
+            story: '舞台之上展现了那些在舞台上闪闪发光的女性艺术家，她们用艺术传达情感，用表演诠释生命。'
+        }
+    };
+
+    const items = [
+        { title: '日记', people: '待补充' },
+        { title: '来信', people: '待补充' },
+        { title: '照片', people: '待补充' }
+    ];
+
+    function loadStory() {
+        const params = new URLSearchParams(window.location.search);
+        let category = params.get('category');
+        
+        // 如果URL中没有category参数，尝试从sessionStorage恢复
+        if (!category) {
+            category = sessionStorage.getItem('currentCategory');
+        }
+        
+        if (category && categories[category]) {
+            document.getElementById('storyTitle').textContent = category;
+            document.getElementById('storyContent').textContent = categories[category].story;
+            // 保存当前类别到sessionStorage
+            sessionStorage.setItem('currentCategory', category);
+        }
+    }
+
+    function goToMap() {
+        window.location.href = 'page5.html';
+    }
+
+    function goToCollect() {
+        window.location.href = 'page6.html';
+    }
+
+    function showItemModal(index) {
+        const item = items[index];
+        document.getElementById('itemTitle').textContent = item.title;
+        document.getElementById('itemPeople').textContent = item.people;
+        document.getElementById('itemModal').classList.add('show');
+    }
+
+    function closeItemModal() {
+        document.getElementById('itemModal').classList.remove('show');
+    }
+
+    window.addEventListener('load', loadStory);
+
+    document.getElementById('itemModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeItemModal();
+        }
+    });
+</script>
+</body>
+</html>

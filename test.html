@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手机端模拟</title>
+    <style>
+        body { background-color: #f0f0f0; display: flex; justify-content: center; padding: 20px; font-family: sans-serif; }
+        /* 模拟手机容器 */
+        .phone-container {
+            width: 375px; height: 667px; 
+            background: white; border: 12px solid #333; border-radius: 40px;
+            overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .screen { padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        input { width: 80%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
+        button { width: 85%; padding: 12px; background: #007AFF; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="phone-container">
+    <div id="pageA" class="screen">
+        <h3>页面 A (输入信息)</h3>
+        <input type="text" id="username" placeholder="请输入用户名">
+        <button onclick="submitData()">点击提交并跳转</button>
+    </div>
+
+    <div id="pageB" class="screen hidden">
+        <h3>页面 B (成功)</h3>
+        <p id="welcomeMsg"></p>
+        <button onclick="goBack()" style="background: #ccc;">返回</button>
+    </div>
+</div>
+
+<script>
+    async function submitData() {
+        const name = document.getElementById('username').value;
+        
+        // 1. 发送数据到 Python 后端
+        try {
+            const response = await fetch('http://127.0.0.1:5000/api/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: name })
+            });
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                // 2. 跳转逻辑 (切换显示)
+                document.getElementById('pageA').classList.add('hidden');
+                document.getElementById('pageB').classList.remove('hidden');
+                document.getElementById('welcomeMsg').innerText = "你好, " + name + "！后端已收到数据。";
+            }
+        } catch (error) {
+            alert("请先启动后端 Python 服务！");
+        }
+    }
+
+    function goBack() {
+        document.getElementById('pageB').classList.add('hidden');
+        document.getElementById('pageA').classList.remove('hidden');
+    }
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手机端模拟</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        body { background-color: transparent; }
+        .screen { padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        input { width: 80%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="phone-container">
+    <div id="pageA" class="screen">
+        <div class="content-card" style="width:100%; display:flex; flex-direction:column; align-items:center; gap:12px;">
+            <h3>页面 A (输入信息)</h3>
+            <input type="text" id="username" placeholder="请输入用户名">
+            <button class="btn-primary" onclick="submitData()">点击提交并跳转</button>
+        </div>
+    </div>
+
+    <div id="pageB" class="screen hidden">
+        <div class="content-card" style="width:100%; display:flex; flex-direction:column; align-items:center; gap:12px;">
+            <h3>页面 B (成功)</h3>
+            <p id="welcomeMsg"></p>
+            <button class="btn-secondary" onclick="goBack()">返回</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function submitData() {
+        const name = document.getElementById('username').value;
+        
+        // 1. 发送数据到 Python 后端
+        try {
+            const response = await fetch('http://127.0.0.1:5000/api/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: name })
+            });
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                // 2. 跳转逻辑 (切换显示)
+                document.getElementById('pageA').classList.add('hidden');
+                document.getElementById('pageB').classList.remove('hidden');
+                document.getElementById('welcomeMsg').innerText = "你好, " + name + "！后端已收到数据。";
+            }
+        } catch (error) {
+            alert("请先启动后端 Python 服务！");
+        }
+    }
+
+    function goBack() {
+        document.getElementById('pageB').classList.add('hidden');
+        document.getElementById('pageA').classList.remove('hidden');
+    }
+</script>
+</body>
+</html>

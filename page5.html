@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>未被书写的她 - 游览路线</title>
+    <link rel="stylesheet" href="common.css">
+    <script src="https://api.map.baidu.com/api?v=1.4&ak=qb1idoYyZMHJeL9xHmUSKJl18XIldZnp"></script>
+    <style>
+        .screen {
+            font-family: '华文行楷', serif !important;
+        }
+        
+        .screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 0;
+        }
+        
+        .screen > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h2 {
+            font-family: '华文行楷', serif !important;
+            font-weight: normal !important;
+            color: white !important;
+            font-size: 32px !important;
+        }
+        
+        .modal-content {
+            font-family: '华文行楷', serif !important;
+        }
+        
+        .modal-content h2 {
+            color: white !important;
+        }
+        
+        .modal-content p {
+            color: #E8E8E8 !important;
+        }
+        
+        .btn-secondary {
+            background: rgba(100, 100, 100, 0.6) !important;
+            border: 2px solid white !important;
+            color: white !important;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(100, 100, 100, 0.8) !important;
+        }
+    </style>
+</head>
+<body>
+<div class="phone-container">
+    <div class="screen" style="background-image: url('陶然亭.jpg'); background-size: cover; background-position: center; background-attachment: fixed;">
+        <h2>游览路线</h2>
+        
+        <div id="baiduMap" class="map-container"></div>
+        
+        <a href="page4.html" style="text-decoration: none; width: 100%;">
+            <button class="btn-secondary">返回</button>
+        </a>
+    </div>
+</div>
+
+<!-- 位置详情弹框 -->
+<div id="locationModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="locTitle"></h2>
+            <button class="modal-close" onclick="closeLocationModal()">×</button>
+        </div>
+        <p><strong>地址：</strong><span id="locAddress"></span></p>
+        <p><strong>故事：</strong><span id="locStory"></span></p>
+        <p><strong>相关人物：</strong><span id="locPeople"></span></p>
+        <p><strong>游戏类型：</strong><span id="locGame"></span></p>
+    </div>
+</div>
+
+<!-- 路线详情弹框 -->
+<div id="routeModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="routeTitle"></h2>
+            <button class="modal-close" onclick="closeRouteModal()">×</button>
+        </div>
+        <p><strong>距离：</strong><span id="routeDistance"></span></p>
+        <p><strong>交通方式：</strong><span id="routeMethod"></span></p>
+        <p><strong>预计时间：</strong><span id="routeTime"></span></p>
+    </div>
+</div>
+
+<script>
+    // 5个地点数据
+    const locations = [
+        {
+            id: 1,
+            name: "陶然亭公园",
+            address: "西城区太平街19号",
+            lat: 39.8806,
+            lng: 116.3885,
+            story: "陶然亭公园是一个文化底蕴深厚的地方，许多伟大的女性曾在此思考人生的意义...",
+            people: "待补充",
+            gameType: "待补充"
+        },
+        {
+            id: 2,
+            name: "陕西巷",
+            address: "西城区陕西巷",
+            lat: 39.9013,
+            lng: 116.4033,
+            story: "陕西巷是北京八大胡同之一，这里曾经是文化艺术汇聚的地方...",
+            people: "待补充",
+            gameType: "待补充"
+        },
+        {
+            id: 3,
+            name: "前门大街",
+            address: "东城区小江胡同1号",
+            lat: 39.9004,
+            lng: 116.4067,
+            story: "前门大街承载着北京的商业和文化历史，许多女性在这里创造了奇迹...",
+            people: "待补充",
+            gameType: "待补充"
+        },
+        {
+            id: 4,
+            name: "北平高等师范学校旧址",
+            address: "西城区大栅栏街道南新华街18号",
+            lat: 39.9245,
+            lng: 116.3892,
+            story: "这所学校培养了许多杰出的教育者和思想家，特别是许多勇敢的女性...",
+            people: "待补充",
+            gameType: "待补充"
+        },
+        {
+            id: 5,
+            name: "女师大旧址",
+            address: "西城区新文化街45号",
+            lat: 39.9238,
+            lng: 116.3899,
+            story: "女师大旧址是北京第一所专门培养女性教师的学校，这里诞生了许多女性教育先驱...",
+            people: "待补充",
+            gameType: "待补充"
+        }
+    ];
+
+    // 4条路线数据
+    const routes = [
+        {
+            from: "陶然亭公园",
+            to: "陕西巷",
+            distance: "2公里",
+            method: "步行",
+            time: "约30分钟"
+        },
+        {
+            from: "陕西巷",
+            to: "前门大街",
+            distance: "1.3公里",
+            method: "步行",
+            time: "约20分钟"
+        },
+        {
+            from: "前门大街",
+            to: "北平高等师范学校旧址",
+            distance: "1.3公里",
+            method: "步行",
+            time: "约20分钟"
+        },
+        {
+            from: "北平高等师范学校旧址",
+            to: "女师大旧址",
+            distance: "1.8公里",
+            method: "步行",
+            time: "约25分钟"
+        }
+    ];
+
+    let map;
+
+    function initMap() {
+        map = new BMap.Map('baiduMap');
+        
+        // 计算中心点
+        let sumLat = 0, sumLng = 0;
+        locations.forEach(loc => {
+            sumLat += loc.lat;
+            sumLng += loc.lng;
+        });
+        const centerLat = sumLat / locations.length;
+        const centerLng = sumLng / locations.length;
+        
+        map.centerAndZoom(new BMap.Point(centerLng, centerLat), 14);
+        map.enableScrollWheelZoom();
+        
+        // 添加地点标记
+        locations.forEach(location => {
+            const marker = new BMap.Marker(new BMap.Point(location.lng, location.lat));
+            map.addOverlay(marker);
+            
+            marker.addEventListener('click', function() {
+                showLocationModal(location);
+            });
+        });
+        
+        // 绘制路线
+        routes.forEach((route, index) => {
+            const startLoc = locations[index];
+            const endLoc = locations[index + 1];
+            
+            const polyline = new BMap.Polyline([
+                new BMap.Point(startLoc.lng, startLoc.lat),
+                new BMap.Point(endLoc.lng, endLoc.lat)
+            ], {
+                strokeColor: '#C60C30',
+                strokeWeight: 4,
+                strokeOpacity: 0.8
+            });
+            
+            map.addOverlay(polyline);
+            
+            polyline.addEventListener('click', function() {
+                showRouteModal(route);
+            });
+        });
+    }
+
+    function showLocationModal(location) {
+        document.getElementById('locTitle').textContent = location.name;
+        document.getElementById('locAddress').textContent = location.address;
+        document.getElementById('locStory').textContent = location.story;
+        document.getElementById('locPeople').textContent = location.people;
+        document.getElementById('locGame').textContent = location.gameType;
+        document.getElementById('locationModal').classList.add('show');
+    }
+
+    function closeLocationModal() {
+        document.getElementById('locationModal').classList.remove('show');
+    }
+
+    function showRouteModal(route) {
+        document.getElementById('routeTitle').textContent = `${route.from} ➡ ${route.to}`;
+        document.getElementById('routeDistance').textContent = route.distance;
+        document.getElementById('routeMethod').textContent = route.method;
+        document.getElementById('routeTime').textContent = route.time;
+        document.getElementById('routeModal').classList.add('show');
+    }
+
+    function closeRouteModal() {
+        document.getElementById('routeModal').classList.remove('show');
+    }
+
+    window.addEventListener('load', initMap);
+
+    // 点击弹框外部关闭
+    document.getElementById('locationModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeLocationModal();
+        }
+    });
+
+    document.getElementById('routeModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeRouteModal();
+        }
+    });
+</script>
+</body>
+</html>
