@@ -110,18 +110,6 @@ http://localhost:5000
 - 用户数据保存在 `data/users.json`
 - 帖子数据保存在 `data/posts.json`
 
-## 颜色配置
-
-所有颜色遵循北京古建筑风格：
-
-```
---primary-red: #C60C30      /* 宫廷红 */
---gold-color: #DAA520       /* 金色 */
---dark-brown: #8B6F47       /* 深棕色 */
---light-beige: #F5DEB3      /* 浅米色 */
---dark-bg: #2C2C2C          /* 深灰背景 */
-```
-
 ## 后续功能扩展
 
 1. **完善故事内容**
