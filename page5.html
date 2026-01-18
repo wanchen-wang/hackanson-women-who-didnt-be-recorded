@@ -10,7 +10,6 @@
         .screen {
             font-family: '华文行楷', serif !important;
         }
-        
         .screen::before {
             content: '';
             position: absolute;
@@ -21,40 +20,24 @@
             background: rgba(0, 0, 0, 0.6);
             z-index: 0;
         }
-        
-        .screen > * {
-            position: relative;
-            z-index: 1;
-        }
-        
+        .screen > * { position: relative; z-index: 1; }
+
         h2 {
             font-family: '华文行楷', serif !important;
             font-weight: normal !important;
             color: white !important;
             font-size: 32px !important;
         }
-        
-        .modal-content {
-            font-family: '华文行楷', serif !important;
-        }
-        
-        .modal-content h2 {
-            color: white !important;
-        }
-        
-        .modal-content p {
-            color: #E8E8E8 !important;
-        }
-        
+
+        /* 移除 page5 对 modal 的颜色覆盖，让 modal 使用全局样式（与 page4 一致） */
+        .modal-content { font-family: inherit; color: inherit; }
+
         .btn-secondary {
             background: rgba(100, 100, 100, 0.6) !important;
             border: 2px solid white !important;
             color: white !important;
         }
-
-        .btn-secondary:hover {
-            background: rgba(100, 100, 100, 0.8) !important;
-        }
+        .btn-secondary:hover { background: rgba(100, 100, 100, 0.8) !important; }
     </style>
 </head>
 <body>
@@ -70,13 +53,10 @@
     </div>
 </div>
 
-<!-- 位置详情弹框 -->
+<!-- 位置详情弹框（与 page4 风格一致；已移除叉号，点击外部关闭） -->
 <div id="locationModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2 id="locTitle"></h2>
-            <button class="modal-close" onclick="closeLocationModal()">×</button>
-        </div>
+        <h3 id="locTitle"></h3>
         <p><strong>地址：</strong><span id="locAddress"></span></p>
         <p><strong>故事：</strong><span id="locStory"></span></p>
         <p><strong>相关人物：</strong><span id="locPeople"></span></p>
@@ -84,13 +64,10 @@
     </div>
 </div>
 
-<!-- 路线详情弹框 -->
+<!-- 路线详情弹框（与 page4 风格一致；已移除叉号，点击外部关闭） -->
 <div id="routeModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2 id="routeTitle"></h2>
-            <button class="modal-close" onclick="closeRouteModal()">×</button>
-        </div>
+        <h3 id="routeTitle"></h3>
         <p><strong>距离：</strong><span id="routeDistance"></span></p>
         <p><strong>交通方式：</strong><span id="routeMethod"></span></p>
         <p><strong>预计时间：</strong><span id="routeTime"></span></p>
